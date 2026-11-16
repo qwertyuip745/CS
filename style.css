@@ -1,0 +1,332 @@
+:root {
+  color-scheme: dark;
+  font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --accent: #c9fa58;
+  --muted: #9aa3ad;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #11151a;
+}
+
+body { color: #f2f4f4; }
+
+#game {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  overflow: hidden;
+  background: #11151a;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  outline: none;
+}
+
+#hud {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+
+body[data-state="playing"] #hud { display: block; }
+
+.top-hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 28px 34px;
+  background: linear-gradient(180deg, rgb(9 12 15 / 68%), transparent);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .03em;
+}
+
+.brand-mark {
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+
+.brand small, .hud-label, .ammo-panel small, .round-info span {
+  color: var(--muted);
+  font-family: "Consolas", monospace;
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.round-info {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 11px 15px;
+  background: rgb(17 21 26 / 72%);
+  border: 1px solid rgb(255 255 255 / 9%);
+}
+
+.round-info strong {
+  min-width: 24px;
+  font-family: "Consolas", monospace;
+  font-size: 15px;
+}
+
+.round-info i {
+  width: 1px;
+  height: 20px;
+  margin: 0 5px;
+  background: rgb(255 255 255 / 20%);
+}
+
+.crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+}
+
+.crosshair::before, .crosshair::after, .crosshair span::before, .crosshair span::after {
+  position: absolute;
+  display: block;
+  content: "";
+  background: #f5f8ee;
+  box-shadow: 0 1px 3px #000;
+}
+
+.crosshair::before, .crosshair::after {
+  left: 9px;
+  width: 2px;
+  height: 6px;
+}
+
+.crosshair::before { top: 0; }
+.crosshair::after { bottom: 0; }
+
+.crosshair span::before, .crosshair span::after {
+  top: 9px;
+  width: 6px;
+  height: 2px;
+}
+
+.crosshair span::before { left: 0; }
+.crosshair span::after { right: 0; }
+
+#hit-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: var(--accent);
+  font: 700 25px "Consolas", monospace;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+#hit-marker.active { opacity: 1; }
+
+.bottom-hud {
+  position: absolute;
+  right: 34px;
+  bottom: 28px;
+  left: 34px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 18px 20px;
+  background: linear-gradient(0deg, rgb(9 12 15 / 68%), transparent);
+}
+
+.health-panel { width: min(250px, 42vw); }
+
+.health-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.health-line strong, .ammo-panel strong {
+  font: 500 28px "Consolas", monospace;
+}
+
+.health-track {
+  width: 100%;
+  height: 5px;
+  overflow: hidden;
+  background: rgb(255 255 255 / 20%);
+}
+
+.health-track span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  transition: width .2s, background-color .2s;
+}
+
+.ammo-panel { text-align: right; }
+.ammo-panel > div { line-height: 1; }
+.ammo-panel > div span { color: var(--muted); font: 18px "Consolas", monospace; }
+.ammo-panel > div span b { font-weight: 400; }
+.ammo-panel small { display: block; margin-top: 8px; }
+.ammo-panel b { color: var(--accent); }
+
+#notice {
+  position: absolute;
+  top: 23%;
+  left: 50%;
+  color: #fff;
+  font: 500 12px "Consolas", monospace;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity .16s;
+}
+
+#notice.visible { opacity: 1; }
+
+.overlay {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(8 11 14 / 58%);
+  backdrop-filter: blur(7px);
+}
+
+body[data-state="playing"] .overlay { display: none; }
+
+.overlay-card {
+  width: min(100%, 470px);
+  padding: 39px 42px 30px;
+  background: #171d23;
+  border: 1px solid rgb(255 255 255 / 10%);
+  box-shadow: 0 28px 90px rgb(0 0 0 / 45%);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font: 10px "Consolas", monospace;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.eyebrow span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+h1 {
+  margin: 20px 0 8px;
+  font-size: clamp(29px, 5vw, 40px);
+  letter-spacing: -.05em;
+}
+
+h1 span { color: var(--accent); }
+
+.overlay-card > p {
+  margin: 0;
+  color: #aeb6bf;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.controls {
+  display: grid;
+  gap: 13px;
+  margin: 27px 0;
+  padding: 18px 0;
+  border-top: 1px solid rgb(255 255 255 / 9%);
+  border-bottom: 1px solid rgb(255 255 255 / 9%);
+}
+
+.controls > div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #bbc2c8;
+  font-size: 11px;
+}
+
+.controls > div > span { margin-right: 12px; }
+
+kbd {
+  min-width: 23px;
+  padding: 4px 6px;
+  color: #dce1e5;
+  font: 10px "Consolas", monospace;
+  text-align: center;
+  background: #252d35;
+  border: 1px solid rgb(255 255 255 / 7%);
+  border-radius: 3px;
+}
+
+button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  color: #151a1e;
+  font: 700 13px "Segoe UI", "Microsoft JhengHei", sans-serif;
+  background: var(--accent);
+  border: 0;
+  cursor: pointer;
+  transition: filter .15s, transform .15s;
+}
+
+button:hover { filter: brightness(1.08); }
+button:active { transform: translateY(1px); }
+button span { font-size: 18px; }
+
+.footnote {
+  display: block;
+  margin-top: 15px;
+  color: #76818b;
+  font: 10px "Consolas", monospace;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .top-hud { padding: 18px 16px; }
+  .brand { font-size: 13px; }
+  .brand small { display: none; }
+  .round-info { gap: 7px; padding: 9px; }
+  .round-info span { font-size: 8px; }
+  .round-info strong { font-size: 12px; }
+  .bottom-hud { right: 16px; bottom: 16px; left: 16px; padding: 14px 10px; }
+  .overlay-card { padding: 30px 24px 24px; }
+  .controls > div { gap: 4px; font-size: 10px; }
+}

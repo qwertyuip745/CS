@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#11151a">
+    <title>訓練場：第一人稱射擊原型</title>
+    <link rel="stylesheet" href="./style.css">
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"
+        }
+      }
+    </script>
+    <script type="module" src="./game.js"></script>
+  </head>
+  <body data-state="menu">
+    <main id="game">
+      <div id="hud" aria-live="polite">
+        <header class="top-hud">
+          <div class="brand"><span class="brand-mark"></span>訓練場 <small>FPS PROTOTYPE</small></div>
+          <div class="round-info">
+            <span>剩餘對手</span><strong id="enemies">03</strong>
+            <i></i>
+            <span>回合時間</span><strong id="timer">01:30</strong>
+          </div>
+        </header>
+        <div class="crosshair" aria-hidden="true"><span></span></div>
+        <div id="hit-marker" aria-hidden="true">×</div>
+        <div class="bottom-hud">
+          <div class="health-panel">
+            <span class="hud-label">生命值</span>
+            <div class="health-line"><strong id="health-value">100</strong><div class="health-track"><span id="health-bar"></span></div></div>
+          </div>
+          <div class="ammo-panel">
+            <div><strong id="ammo-value">30</strong><span> / <b id="reserve-value">90</b></span></div>
+            <small>彈藥 <b>·</b> R 重新裝填</small>
+          </div>
+        </div>
+        <div id="notice" role="status"></div>
+      </div>
+
+      <section id="overlay" class="overlay">
+        <div class="overlay-card">
+          <div class="eyebrow"><span></span>單人訓練 · 回合制</div>
+          <h1 id="overlay-title">準備進場<span>.</span></h1>
+          <p id="overlay-copy">每回合會隨機刷新 5–20 名 BOT，擊敗全部對手即可取勝。</p>
+          <div class="controls">
+            <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>移動</span></div>
+            <div><kbd>滑鼠</kbd><span>瞄準</span><kbd>左鍵</kbd><span>射擊</span></div>
+            <div><kbd>R</kbd><span>重新裝填</span><kbd>Esc</kbd><span>暫停</span></div>
+          </div>
+          <button id="start-button" type="button">進入訓練場 <span>→</span></button>
+          <small class="footnote">建議使用桌面瀏覽器與滑鼠遊玩</small>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
